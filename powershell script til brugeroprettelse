@@ -1,0 +1,11 @@
+# Angiv stien til CSV-filen
+$csvPath = "C:\Users\zand0198\Desktop\csv.csv"
+
+# Importer CSV-fil
+$users = Import-Csv -Path $csvPath
+
+# Loop gennem hver række i CSV
+foreach ($user in $users) {
+    # Opret en ny bruger i Active Directory i OU 'salg'
+    New-ADUser -Name "$($user.FirstName) $($user.LastName)" -GivenName "$($user.FirstName)" -Surname "$($user.LastName)" -UserPrincipalName "$($user.Username)@merc.local" -SamAccountName "$($user.PreWin2000Username)" -DisplayName "$($user.DisplayName)" -Path "OU=salg,OU=merc,DC=merc,DC=local" -AccountPassword (ConvertTo-SecureString "$($user.Password)" -AsPlainText -Force) -Enabled $true
+}
